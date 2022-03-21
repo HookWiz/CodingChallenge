@@ -1,0 +1,36 @@
+/*
+Company:  CFPT-I
+Author:  Arthur Jegge <arthur.jgg2@eduge.ch>
+Project:  _Template
+Details:  css global
+Date: 19.03.2022
+Version: 1.0
+*/
+
+@font-face {
+    font-family: 'Fredoka';
+    src: url('../font/Fredoka-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    font-size: 18px;
+    font-family: 'Fredoka', Arial, sans-serif;
+    color: #000000;
+}
+
+li {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+    color: #000000;
+}
