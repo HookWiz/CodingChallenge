@@ -11,18 +11,25 @@ Version: 1.0
  * A graphics effect
  */
 class Star {
+    container;
     element = document.createElement('div');
-    size = 1;
+    size = 10;
     speed = 1;
-
+    u;
     /**
      * the constructor of the class star
      * @param {HTMLElement} container  the container of the star
      */
     constructor(container) {
-        container.appendChild(this.element);
+        // use the same reference
+        this.container = container;
+        this.container.appendChild(this.element);
         this.element.classList.add('star');
-        this.generate(container.center);
+        this.u = {
+            x: this.container.width / 1000,
+            y: this.container.height / 1000,
+        };
+        this.generate();
         this.show();
     };
     /**
@@ -30,52 +37,53 @@ class Star {
      * @param {object} center   the center of the area
      * @param {int} radius      the radius of the area
      */
-    generate(center) {
+    generate() {
+        let center = this.container.center;
         let radius = 100;
         let maxRangeX = center.x + radius;
         let minRangeX = center.x - radius;
         let maxRangeY = center.y + radius;
         let minRangeY = center.y - radius;
-        this.element.x = Math.floor(Math.random() * (maxRangeX - minRangeX)) + minRangeX;
-        this.element.y = Math.floor(Math.random() * (maxRangeY - minRangeY)) + minRangeY;
+        this.x = Math.floor(Math.random() * (maxRangeX - minRangeX)) + minRangeX;
+        this.y = Math.floor(Math.random() * (maxRangeY - minRangeY)) + minRangeY;
     };
     /**
      * calculate the position from the center of the container
      */
     positionFromCenter() {
-        this.element.cx = this.element.x - container.center.x;
-        this.element.cy = this.element.y - container.center.y;
+        this.cx = (this.x - container.center.x) / this.u.x;
+        this.cy = (this.y - container.center.y) / this.u.y;
     };
     /**
      * calculate the slope
      */
     calculateSlope() {
-        this.element.slope = this.element.cy / this.element.cx;
+        this.slope = this.cy / this.cx;
     };
     /**
      * update the x position
      */
     updateXPosition() {
-        if (this.element.cx > 0) {
-            this.element.cx += this.speed;
+        if (this.cx > 0) {
+            this.cx += this.speed;
         } else {
-            this.element.cx -= this.speed;
+            this.cx -= this.speed;
         }
-        this.element.x = container.center.x + this.element.cx;
+        this.x = (this.container.center.x + this.cx) * this.u.x;
     };
     /**
      * update the y position
      */
     updateYPosition() {
-        this.element.cy = this.element.slope * this.element.cx;
-        this.element.y = container.center.y + this.element.cy;
+        this.cy = this.slope * this.cx;
+        this.y = (this.container.center.y + this.cy) * this.u.y;
     };
     /**
      * update the position
      */
     updatePosition() {
-        this.calculateSlope();
         this.updateXPosition();
+        this.calculateSlope();
         this.updateYPosition();
     };
     /**
@@ -83,27 +91,26 @@ class Star {
      */
     regenerate() {
         // if the star go beyond the border of the container regenerate the star
-        if (this.element.x > container.x + container.width || this.element.x < 0) {
-            this.generate(container.center, this.element.radius);
+        if (this.x > this.container.x + this.container.width || this.x < 0) {
+            this.generate();
         }
-        if (this.element.y > container.y + container.height || this.element.y < 0) {
-            this.generate(container.center, this.element.radius);
+        if (this.y > this.container.y + this.container.height || this.y < 0) {
+            this.generate();
         }
     };
     /**
      * show the star
      */
     show() {
-        this.element.style.top = `${this.element.y}px`;
-        this.element.style.left = `${this.element.x}px`;
+        this.element.style.top = `${this.y}px`;
+        this.element.style.left = `${this.x}px`;
         this.element.style.width = `${this.size}px`;
         this.element.style.height = `${this.size}px`;
     };
     /**
      * update the star
-     * @param {HtmlElement} container 
      */
-    update(container) {
+    update() {
         this.positionFromCenter();
         this.updatePosition();
         this.regenerate();
