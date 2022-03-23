@@ -6,7 +6,6 @@ Details: main script
 Date: 19.03.2022
 Version: 1.0
 */
-//! Problème: les stars partent toutes dans la même direction, corriger bug.
 //* Initialisation
 let container = document.querySelector('.container');
 container.width = container.getBoundingClientRect().width;
@@ -17,11 +16,10 @@ container.center = { x: 0, y: 0 };
 container.center.x = container.x + container.width / 2;
 container.center.y = container.y + container.height / 2;
 let stars = [];
-const nbStar = 4;
+const nbStar = 100;
 for (let i = 0; i < nbStar; i++) {
     stars[i] = new Star(container);
 }
-stars[0].element.style.backgroundColor = 'red';
 let centerPoint = document.getElementById('center');
 centerPoint.style.top = `${container.center.y}px`;
 centerPoint.style.left = `${container.center.x}px`;
@@ -31,4 +29,4 @@ function update() {
         star.update(container);
     })
 }
-setInterval(update, [100]);
+setInterval(update, [10]);

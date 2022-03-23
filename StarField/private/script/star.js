@@ -14,7 +14,7 @@ class Star {
     container;
     element = document.createElement('div');
     size = 10;
-    speed = 1;
+    speed = 10;
     u;
     /**
      * the constructor of the class star
@@ -30,6 +30,8 @@ class Star {
             y: this.container.height / 1000,
         };
         this.generate();
+        this.positionFromCenter();
+        this.calculateSlope();
         this.show();
     };
     /**
@@ -39,6 +41,7 @@ class Star {
      */
     generate() {
         let center = this.container.center;
+        /*
         let radius = 100;
         let maxRangeX = center.x + radius;
         let minRangeX = center.x - radius;
@@ -46,13 +49,16 @@ class Star {
         let minRangeY = center.y - radius;
         this.x = Math.floor(Math.random() * (maxRangeX - minRangeX)) + minRangeX;
         this.y = Math.floor(Math.random() * (maxRangeY - minRangeY)) + minRangeY;
+        */
+        this.x = Math.floor(Math.random() * (this.container.width));
+        this.y = Math.floor(Math.random() * (this.container.height));
     };
     /**
      * calculate the position from the center of the container
      */
     positionFromCenter() {
-        this.cx = (this.x - container.center.x) / this.u.x;
-        this.cy = (this.y - container.center.y) / this.u.y;
+        this.cx = (this.x - container.center.x);
+        this.cy = (this.y - container.center.y);
     };
     /**
      * calculate the slope
@@ -69,21 +75,22 @@ class Star {
         } else {
             this.cx -= this.speed;
         }
-        this.x = (this.container.center.x + this.cx) * this.u.x;
+        this.x = this.container.center.x + this.cx;
     };
     /**
      * update the y position
      */
     updateYPosition() {
         this.cy = this.slope * this.cx;
-        this.y = (this.container.center.y + this.cy) * this.u.y;
+        //! Probleme, y may be negative or infinity
+        this.y = this.container.center.y + this.cy;
     };
     /**
      * update the position
      */
     updatePosition() {
+        this.positionFromCenter();
         this.updateXPosition();
-        this.calculateSlope();
         this.updateYPosition();
     };
     /**
@@ -91,12 +98,14 @@ class Star {
      */
     regenerate() {
         // if the star go beyond the border of the container regenerate the star
-        if (this.x > this.container.x + this.container.width || this.x < 0) {
+        if (this.x > this.container.x + this.container.width || this.x < this.container.x) {
             this.generate();
         }
-        if (this.y > this.container.y + this.container.height || this.y < 0) {
+        if (this.y > this.container.y + this.container.height || this.y < this.container.y) {
             this.generate();
         }
+        this.positionFromCenter();
+        this.calculateSlope();
     };
     /**
      * show the star
@@ -111,7 +120,6 @@ class Star {
      * update the star
      */
     update() {
-        this.positionFromCenter();
         this.updatePosition();
         this.regenerate();
         this.show();
